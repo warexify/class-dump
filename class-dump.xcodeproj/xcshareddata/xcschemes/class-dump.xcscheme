@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0640"
-   version = "1.8">
+   LastUpgradeVersion = "0930"
+   version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
@@ -10,11 +10,11 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "#env &gt; /tmp/env-cd&#10;mkdir -p /Local/$USER/$CONFIGURATION&#10;rm -f /Local/$USER/$CONFIGURATION/$PRODUCT_NAME&#10;ln -s $TARGET_BUILD_DIR/$PRODUCT_NAME /Local/$USER/$CONFIGURATION&#10;">
+               scriptText = "#env &gt; /tmp/env-cd&#10;mkdir -p /Users/$USER/$CONFIGURATION&#10;rm -f /Users/$USER/$CONFIGURATION/$PRODUCT_NAME&#10;ln -s $TARGET_BUILD_DIR/$PRODUCT_NAME /Users/$USER/$CONFIGURATION&#10;">
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"
-                     BlueprintIdentifier = "01EB825E13A590D9003EDE60"
+                     BlueprintIdentifier = "B0DD94E52066C3A2002CDB03"
                      BuildableName = "class-dump"
                      BlueprintName = "class-dump"
                      ReferencedContainer = "container:class-dump.xcodeproj">
@@ -32,7 +32,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "01EB825E13A590D9003EDE60"
+               BlueprintIdentifier = "B0DD94E52066C3A2002CDB03"
                BuildableName = "class-dump"
                BlueprintName = "class-dump"
                ReferencedContainer = "container:class-dump.xcodeproj">
@@ -41,89 +41,58 @@
       </BuildActionEntries>
    </BuildAction>
    <TestAction
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      buildConfiguration = "Debug">
+      shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "01EB825E13A590D9003EDE60"
+            BlueprintIdentifier = "B0DD94E52066C3A2002CDB03"
             BuildableName = "class-dump"
             BlueprintName = "class-dump"
             ReferencedContainer = "container:class-dump.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
+      <AdditionalOptions>
+      </AdditionalOptions>
    </TestAction>
    <LaunchAction
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      displayScaleIsEnabled = "NO"
-      displayScale = "1.00"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Debug"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "01EB825E13A590D9003EDE60"
+            BlueprintIdentifier = "B0DD94E52066C3A2002CDB03"
             BuildableName = "class-dump"
             BlueprintName = "class-dump"
             ReferencedContainer = "container:class-dump.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <CommandLineArguments>
-         <CommandLineArgument
-            argument = "~/Applications/Kindle.app"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "/Users/nygard/Library/Developer/Xcode/DerivedData/NewApp5-eblpfarcajqhnmfwnhncmpmhsjog/Build/Products/Debug-iphoneos/NewApp5.app/NewApp5"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--arch armv7s"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "/Applications/Utilities/Grab.app --arch x86_64"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "/Users/nygard/Downloads/p/Principle.app"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "/System/Library/Frameworks/Foundation.framework"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "/Applications/Automator.app"
-            isEnabled = "NO">
-         </CommandLineArgument>
-      </CommandLineArguments>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
-      displayScaleIsEnabled = "NO"
-      displayScale = "1.00"
+      buildConfiguration = "Release"
       shouldUseLaunchSchemeArgsEnv = "NO"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "01EB825E13A590D9003EDE60"
+            BlueprintIdentifier = "B0DD94E52066C3A2002CDB03"
             BuildableName = "class-dump"
             BlueprintName = "class-dump"
             ReferencedContainer = "container:class-dump.xcodeproj">
@@ -152,7 +121,7 @@
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"
-                     BlueprintIdentifier = "01EB825E13A590D9003EDE60"
+                     BlueprintIdentifier = "B0DD94E52066C3A2002CDB03"
                      BuildableName = "class-dump"
                      BlueprintName = "class-dump"
                      ReferencedContainer = "container:class-dump.xcodeproj">
@@ -171,7 +140,7 @@
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"
-                     BlueprintIdentifier = "01EB825E13A590D9003EDE60"
+                     BlueprintIdentifier = "B0DD94E52066C3A2002CDB03"
                      BuildableName = "class-dump"
                      BlueprintName = "class-dump"
                      ReferencedContainer = "container:class-dump.xcodeproj">

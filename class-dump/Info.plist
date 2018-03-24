@@ -3,12 +3,16 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.stevenygard.class-dump</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>class-dump</string>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundleShortVersionString</key>
+	<string>3.5</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
 </dict>
 </plist>
