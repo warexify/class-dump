@@ -11,8 +11,10 @@
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.5</string>
+	<string>3.6</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright (C) 1997-1998, 2000-2001, 2004-2015 Steve Nygard.</string>
 </dict>
 </plist>

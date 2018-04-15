@@ -1,3 +1,9 @@
+### Version 3.6 - Released 2018-04-15
+
+* Targeting 10.13 now, and building with the 10.13 SDK.
+* Patches necessary to work [without OpenSSL](https://github.com/nygard/class-dump/pull/58)
+* Homebrew [formulae](https://github.com/warexify/homebrew-edk2-buildtools/blob/master/Formula/class-dump.rb)
+
 ### Version 3.5 - Released 2013-11-16
 
 * Targeting 10.8+ now, and building with the 10.9 SDK.

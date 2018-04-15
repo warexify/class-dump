@@ -6,18 +6,12 @@ segment of Mach-O files.  It generates declarations for the classes,
 categories and protocols.  This is the same information provided by
 using 'otool -ov', but presented as normal Objective-C declarations.
 
-The latest version and information is available at:
-
-    http://stevenygard.com/projects/class-dump
-
-The source code is also available from my Github repository at:
-
-    https://github.com/nygard/class-dump
+This is my [fork](https://github.com/warexify/class-dump) of Steve Nygard's [original repo](https://github.com/nygard/class-dump). Includes patches necessary to work [without OpenSSL](https://github.com/nygard/class-dump/pull/58).
 
 Usage
 -----
 
-    class-dump 3.5 (64 bit)
+    class-dump 3.6 (64 bit)
     Usage: class-dump [options] <mach-o-file>
 
       where options are:
