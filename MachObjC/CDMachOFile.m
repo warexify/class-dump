@@ -44,7 +44,7 @@ static NSString *CDMachOFileMagicNumberDescription(uint32_t magic)
 @implementation CDMachOFile
 {
     CDByteOrder _byteOrder;
-    
+
     NSArray *_loadCommands;
     NSArray *_dylibLoadCommands;
     NSArray *_segments;
@@ -69,7 +69,7 @@ static NSString *CDMachOFileMagicNumberDescription(uint32_t magic)
 	uint32_t _sizeofcmds;
 	uint32_t _flags;
 	uint32_t _reserved;
-    
+
     BOOL _uses64BitABI;
 }
 
@@ -78,7 +78,7 @@ static NSString *CDMachOFileMagicNumberDescription(uint32_t magic)
     if ((self = [super init])) {
         _byteOrder = CDByteOrder_LittleEndian;
     }
-    
+
     return self;
 }
 
@@ -86,7 +86,7 @@ static NSString *CDMachOFileMagicNumberDescription(uint32_t magic)
 {
     if ((self = [super initWithData:data filename:filename searchPathState:searchPathState])) {
         _byteOrder = CDByteOrder_LittleEndian;
-        
+
         CDDataCursor *cursor = [[CDDataCursor alloc] initWithData:data];
         _magic = [cursor readBigInt32];
         if (_magic == MH_MAGIC || _magic == MH_MAGIC_64) {
@@ -96,9 +96,9 @@ static NSString *CDMachOFileMagicNumberDescription(uint32_t magic)
         } else {
             return nil;
         }
-        
+
         _uses64BitABI = (_magic == MH_MAGIC_64) || (_magic == MH_CIGAM_64);
-        
+
         if (_byteOrder == CDByteOrder_LittleEndian) {
             _cputype    = [cursor readLittleInt32];
             _cpusubtype = [cursor readLittleInt32];
@@ -120,9 +120,9 @@ static NSString *CDMachOFileMagicNumberDescription(uint32_t magic)
                 _reserved = [cursor readBigInt32];
             }
         }
-        
+
         NSAssert(_uses64BitABI == CDArchUses64BitABI((CDArch){ .cputype = _cputype, .cpusubtype = _cpusubtype }), @"Header magic should match cpu arch", nil);
-        
+
         NSUInteger headerOffset = _uses64BitABI ? sizeof(struct mach_header_64) : sizeof(struct mach_header);
         CDMachOFileDataCursor *fileCursor = [[CDMachOFileDataCursor alloc] initWithFile:self offset:headerOffset];
         [self _readLoadCommands:fileCursor count:_ncmds];
@@ -140,7 +140,7 @@ static NSString *CDMachOFileMagicNumberDescription(uint32_t magic)
     NSMutableArray *runPathCommands   = [[NSMutableArray alloc] init];
     NSMutableArray *dyldEnvironment   = [[NSMutableArray alloc] init];
     NSMutableArray *reExportedDylibs  = [[NSMutableArray alloc] init];
-    
+
     for (uint32_t index = 0; index < count; index++) {
         CDLoadCommand *loadCommand = [CDLoadCommand loadCommandWithDataCursor:cursor];
         if (loadCommand != nil) {
@@ -214,8 +214,8 @@ static NSString *CDMachOFileMagicNumberDescription(uint32_t magic)
 {
     return self.uses64BitABI ? sizeof(uint64_t) : sizeof(uint32_t);
 }
-             
-// We only have one architecture, so it is by default the best match.  
+
+// We only have one architecture, so it is by default the best match.
 - (BOOL)bestMatchForArch:(CDArch *)ioArchPtr;
 {
     if (ioArchPtr != NULL) {
@@ -328,9 +328,9 @@ static NSString *CDMachOFileMagicNumberDescription(uint32_t magic)
 
     CDLCSegment *segment = [self segmentContainingAddress:address];
     if (segment == nil) {
-        NSLog(@"Error: Cannot find offset for address 0x%08lx in stringAtAddress:", address);
-        exit(5);
-        return nil;
+        NSLog(@"Warning: Cannot find offset for address 0x%08lx in stringAtAddress:", address);
+//        exit(5);
+        return @"Swift";
     }
 
     if ([segment isProtected]) {
@@ -346,7 +346,10 @@ static NSString *CDMachOFileMagicNumberDescription(uint32_t magic)
     NSUInteger offset = [self dataOffsetForAddress:address];
     if (offset == 0)
         return nil;
-
+    if (offset == -'S') {
+        NSLog(@"Warning: Meet Swift object at %s",__cmd);
+        return @"Swift";
+    }
     ptr = (uint8_t *)[self.data bytes] + offset;
 
     return [[NSString alloc] initWithBytes:ptr length:strlen(ptr) encoding:NSASCIIStringEncoding];
@@ -359,8 +362,9 @@ static NSString *CDMachOFileMagicNumberDescription(uint32_t magic)
 
     CDLCSegment *segment = [self segmentContainingAddress:address];
     if (segment == nil) {
-        NSLog(@"Error: Cannot find offset for address 0x%08lx in dataOffsetForAddress:", address);
-        exit(5);
+        NSLog(@"Warning: Cannot find offset for address 0x%08lx in dataOffsetForAddress:", address);
+        NSLog(@"Warning: Maybe meet a Swift object at %s",__cmd);
+//        exit(5);
     }
 
     if ([segment isProtected]) {
@@ -578,7 +582,7 @@ static NSString *CDMachOFileMagicNumberDescription(uint32_t magic)
 {
     if ([self hasObjectiveC2Data])
         return [CDObjectiveC2Processor class];
-    
+
     return [CDObjectiveC1Processor class];
 }
 
@@ -586,7 +590,7 @@ static NSString *CDMachOFileMagicNumberDescription(uint32_t magic)
 {
     if (libraryOrdinal == SELF_LIBRARY_ORDINAL || libraryOrdinal >= MAX_LIBRARY_ORDINAL)
         return nil;
-    
+
     NSArray *loadCommands = _dylibLoadCommands;
     if (_dylibIdentifier != nil) {
         // Remove our own ID (LC_ID_DYLIB) so that we calculate the correct offset
@@ -594,7 +598,7 @@ static NSString *CDMachOFileMagicNumberDescription(uint32_t magic)
         [remainingLoadCommands removeObject:_dylibIdentifier];
         loadCommands = remainingLoadCommands;
     }
-    
+
     if (libraryOrdinal - 1 < [loadCommands count]) // Ordinals start from 1
         return loadCommands[libraryOrdinal - 1];
     else

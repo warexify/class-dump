@@ -1,3 +1,8 @@
+### Version 3.7 - Released 2018-07-18
+
+* Targeting 10.13 now, and building with the 10.13 SDK.
+* Patches for [swift support](https://github.com/nygard/class-dump/pull/78)
+
 ### Version 3.6 - Released 2018-04-15
 
 * Targeting 10.13 now, and building with the 10.13 SDK.
@@ -70,7 +75,7 @@
   * Show UUID under filename.
 * ~~The latest source is now available at the [class-dump Mercurial repository at bitbucket.org](http://bitbucket.org/nygard/class-dump).~~
 * 2011-05-12: I’ve switched to git, and moved the repository to github. The latest source is now available at the [class-dump git repository at github](http://github.com/nygard/class-dump).
- 
+
 ### Version 3.3.2 - Released 2010-05-11
 
 * The `-a` and `-A` options should work again.
@@ -147,7 +152,7 @@
 ### Version 3.0 - Released 2004-02-18
 
 * Integrated several outstanding patches:
-  * Anjo Krank added an option, `-I`, to sort the classes by dependancy.  
+  * Anjo Krank added an option, `-I`, to sort the classes by dependancy.
   * Kurt Revis made some changes to support filenames that contain some non-ASCII characters.
   * Jonathan Rentzsch added an option, `-H`, to generate separate header files for each class and protocol.
   * Stéphane Corthésy made some changes:

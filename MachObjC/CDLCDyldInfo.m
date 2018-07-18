@@ -47,7 +47,7 @@ static NSString *CDBindTypeDescription(uint8_t type)
 @implementation CDLCDyldInfo
 {
     struct dyld_info_command _dyldInfoCommand;
-    
+
     NSUInteger _ptrSize;
     NSMutableDictionary *_symbolNamesByAddress;
 }
@@ -57,7 +57,7 @@ static NSString *CDBindTypeDescription(uint8_t type)
     if ((self = [super initWithDataCursor:cursor])) {
         _dyldInfoCommand.cmd     = [cursor readInt32];
         _dyldInfoCommand.cmdsize = [cursor readInt32];
-        
+
         _dyldInfoCommand.rebase_off     = [cursor readInt32];
         _dyldInfoCommand.rebase_size    = [cursor readInt32];
         _dyldInfoCommand.bind_off       = [cursor readInt32];
@@ -68,7 +68,12 @@ static NSString *CDBindTypeDescription(uint8_t type)
         _dyldInfoCommand.lazy_bind_size = [cursor readInt32];
         _dyldInfoCommand.export_off     = [cursor readInt32];
         _dyldInfoCommand.export_size    = [cursor readInt32];
-        
+
+        if (_dyldInfoCommand.cmd == -'S' || _dyldInfoCommand.cmdsize == -'S' || _dyldInfoCommand.rebase_off == -'S' || _dyldInfoCommand.rebase_size == -'S' || _dyldInfoCommand.bind_off == -'S' || _dyldInfoCommand.bind_size == -'S' || _dyldInfoCommand.weak_bind_off == -'S' || _dyldInfoCommand.weak_bind_size == -'S' || _dyldInfoCommand.lazy_bind_off == -'S' || _dyldInfoCommand.lazy_bind_size == -'S' || _dyldInfoCommand.export_off == -'S' || _dyldInfoCommand.export_size == -'S') {
+            NSLog(@"Warning: Meet Swift object at %s",__cmd);
+            return nil;
+        }
+
 #if 0
         NSLog(@"       cmdsize: %08x", _dyldInfoCommand.cmdsize);
         NSLog(@"    rebase_off: %08x", _dyldInfoCommand.rebase_off);
@@ -82,9 +87,9 @@ static NSString *CDBindTypeDescription(uint8_t type)
         NSLog(@"    export_off: %08x", _dyldInfoCommand.export_off);
         NSLog(@"   export_size: %08x", _dyldInfoCommand.export_size);
 #endif
-        
+
         _ptrSize = [[cursor machOFile] ptrSize];
-        
+
         _symbolNamesByAddress = [[NSMutableDictionary alloc] init];
     }
 
@@ -100,7 +105,7 @@ static NSString *CDBindTypeDescription(uint8_t type)
     [self parseWeakBindInfo];
     //[self logLazyBindInfo];
     //[self logExportedSymbols];
-    
+
     //NSLog(@"symbolNamesByAddress: %@", symbolNamesByAddress);
 }
 
@@ -153,38 +158,38 @@ static NSString *CDBindTypeDescription(uint8_t type)
                 //NSLog(@"REBASE_OPCODE: DONE");
                 isDone = YES;
                 break;
-                
+
             case REBASE_OPCODE_SET_TYPE_IMM:
                 //NSLog(@"REBASE_OPCODE: SET_TYPE_IMM,                       type = 0x%x // %@", immediate, CDRebaseTypeString(immediate));
                 type = immediate;
                 break;
-                
+
             case REBASE_OPCODE_SET_SEGMENT_AND_OFFSET_ULEB: {
                 uint64_t val = read_uleb128(&ptr, end);
-                
+
                 //NSLog(@"REBASE_OPCODE: SET_SEGMENT_AND_OFFSET_ULEB,        segment index: %u, offset: %016lx", immediate, val);
                 NSParameterAssert(immediate < [segments count]);
                 address = [segments[immediate] vmaddr] + val;
                 //NSLog(@"    address: %016lx", address);
                 break;
             }
-                
+
             case REBASE_OPCODE_ADD_ADDR_ULEB: {
                 uint64_t val = read_uleb128(&ptr, end);
-                
+
                 //NSLog(@"REBASE_OPCODE: ADD_ADDR_ULEB,                      addr += %016lx", val);
                 address += val;
                 //NSLog(@"    address: %016lx", address);
                 break;
             }
-                
+
             case REBASE_OPCODE_ADD_ADDR_IMM_SCALED:
                 // I expect sizeof(uintptr_t) == sizeof(uint64_t)
                 //NSLog(@"REBASE_OPCODE: ADD_ADDR_IMM_SCALED,                addr += %u * %u", immediate, sizeof(uint64_t));
                 address += immediate * _ptrSize;
                 //NSLog(@"    address: %016lx", address);
                 break;
-                
+
             case REBASE_OPCODE_DO_REBASE_IMM_TIMES: {
                 //NSLog(@"REBASE_OPCODE: DO_REBASE_IMM_TIMES,                count: %u", immediate);
                 for (uint32_t index = 0; index < immediate; index++) {
@@ -194,10 +199,10 @@ static NSString *CDBindTypeDescription(uint8_t type)
                 rebaseCount += immediate;
                 break;
             }
-                
+
             case REBASE_OPCODE_DO_REBASE_ULEB_TIMES: {
                 uint64_t count = read_uleb128(&ptr, end);
-                
+
                 //NSLog(@"REBASE_OPCODE: DO_REBASE_ULEB_TIMES,               count: 0x%016lx", count);
                 for (uint64_t index = 0; index < count; index++) {
                     [self rebaseAddress:address type:type];
@@ -206,7 +211,7 @@ static NSString *CDBindTypeDescription(uint8_t type)
                 rebaseCount += count;
                 break;
             }
-                
+
             case REBASE_OPCODE_DO_REBASE_ADD_ADDR_ULEB: {
                 uint64_t val = read_uleb128(&ptr, end);
                 // --------------------------------------------------------:
@@ -216,7 +221,7 @@ static NSString *CDBindTypeDescription(uint8_t type)
                 rebaseCount++;
                 break;
             }
-                
+
             case REBASE_OPCODE_DO_REBASE_ULEB_TIMES_SKIPPING_ULEB: {
                 uint64_t count = read_uleb128(&ptr, end);
                 uint64_t skip = read_uleb128(&ptr, end);
@@ -228,7 +233,7 @@ static NSString *CDBindTypeDescription(uint8_t type)
                 rebaseCount += count;
                 break;
             }
-                
+
             default:
                 NSLog(@"Unknown opcode op: %x, imm: %x", opcode, immediate);
                 exit(99);
@@ -313,56 +318,56 @@ static NSString *CDBindTypeDescription(uint8_t type)
         switch (opcode) {
             case BIND_OPCODE_DONE:
                 if (debugBindOps) NSLog(@"BIND_OPCODE: DONE");
-                
+
                 // The lazy bindings have one of these at the end of each bind.
                 if (isLazy == NO)
                     isDone = YES;
                 break;
-                
+
             case BIND_OPCODE_SET_DYLIB_ORDINAL_IMM:
                 libraryOrdinal = immediate;
                 if (debugBindOps) NSLog(@"BIND_OPCODE: SET_DYLIB_ORDINAL_IMM,          libraryOrdinal = %lld", libraryOrdinal);
                 break;
-                
+
             case BIND_OPCODE_SET_DYLIB_ORDINAL_ULEB:
                 libraryOrdinal = read_uleb128(&ptr, end);
                 if (debugBindOps) NSLog(@"BIND_OPCODE: SET_DYLIB_ORDINAL_ULEB,         libraryOrdinal = %lld", libraryOrdinal);
                 break;
-                
+
             case BIND_OPCODE_SET_DYLIB_SPECIAL_IMM: {
                 // Special means negative
                 if (immediate == 0)
                     libraryOrdinal = 0;
                 else {
                     int8_t val = immediate | BIND_OPCODE_MASK; // This sign extends the value
-                    
+
                     libraryOrdinal = val;
                 }
                 if (debugBindOps) NSLog(@"BIND_OPCODE: SET_DYLIB_SPECIAL_IMM,          libraryOrdinal = %lld", libraryOrdinal);
                 break;
             }
-                
+
             case BIND_OPCODE_SET_SYMBOL_TRAILING_FLAGS_IMM:
                 symbolName = (const char *)ptr;
                 symbolFlags = immediate;
                 if (debugBindOps) NSLog(@"BIND_OPCODE: SET_SYMBOL_TRAILING_FLAGS_IMM,  flags: %02x, str = %s", symbolFlags, symbolName);
                 while (*ptr != 0)
                     ptr++;
-                
+
                 ptr++; // skip the trailing zero
-                
+
                 break;
-                
+
             case BIND_OPCODE_SET_TYPE_IMM:
                 if (debugBindOps) NSLog(@"BIND_OPCODE: SET_TYPE_IMM,                   type = %u (%@)", immediate, CDBindTypeDescription(immediate));
                 type = immediate;
                 break;
-                
+
             case BIND_OPCODE_SET_ADDEND_SLEB:
                 addend = read_sleb128(&ptr, end);
                 if (debugBindOps) NSLog(@"BIND_OPCODE: SET_ADDEND_SLEB,                addend = %lld", addend);
                 break;
-                
+
             case BIND_OPCODE_SET_SEGMENT_AND_OFFSET_ULEB: {
                 segmentIndex = immediate;
                 uint64_t val = read_uleb128(&ptr, end);
@@ -371,21 +376,21 @@ static NSString *CDBindTypeDescription(uint8_t type)
                 if (debugBindOps) NSLog(@"    address = 0x%016llx", address);
                 break;
             }
-                
+
             case BIND_OPCODE_ADD_ADDR_ULEB: {
                 uint64_t val = read_uleb128(&ptr, end);
                 if (debugBindOps) NSLog(@"BIND_OPCODE: ADD_ADDR_ULEB,                  addr += 0x%016llx", val);
                 address += val;
                 break;
             }
-                
+
             case BIND_OPCODE_DO_BIND:
                 if (debugBindOps) NSLog(@"BIND_OPCODE: DO_BIND");
                 [self bindAddress:address type:type symbolName:symbolName flags:symbolFlags addend:addend libraryOrdinal:libraryOrdinal];
                 address += _ptrSize;
                 bindCount++;
                 break;
-                
+
             case BIND_OPCODE_DO_BIND_ADD_ADDR_ULEB: {
                 uint64_t val = read_uleb128(&ptr, end);
                 if (debugBindOps) NSLog(@"BIND_OPCODE: DO_BIND_ADD_ADDR_ULEB,          address += %016llx", val);
@@ -394,14 +399,14 @@ static NSString *CDBindTypeDescription(uint8_t type)
                 bindCount++;
                 break;
             }
-                
+
             case BIND_OPCODE_DO_BIND_ADD_ADDR_IMM_SCALED:
                 if (debugBindOps) NSLog(@"BIND_OPCODE: DO_BIND_ADD_ADDR_IMM_SCALED,    address += %u * %lu", immediate, _ptrSize);
                 [self bindAddress:address type:type symbolName:symbolName flags:symbolFlags addend:addend libraryOrdinal:libraryOrdinal];
                 address += _ptrSize + immediate * _ptrSize;
                 bindCount++;
                 break;
-                
+
             case BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB: {
                 uint64_t count = read_uleb128(&ptr, end);
                 uint64_t skip = read_uleb128(&ptr, end);
@@ -413,7 +418,7 @@ static NSString *CDBindTypeDescription(uint8_t type)
                 bindCount += count;
                 break;
             }
-                
+
             default:
                 NSLog(@"Unknown opcode op: %x, imm: %x", opcode, immediate);
                 exit(99);

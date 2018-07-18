@@ -11,7 +11,7 @@ This is my [fork](https://github.com/warexify/class-dump) of Steve Nygard's [ori
 Usage
 -----
 
-    class-dump 3.6 (64 bit)
+    class-dump 3.7 (64 bit)
     Usage: class-dump [options] <mach-o-file>
 
       where options are:
